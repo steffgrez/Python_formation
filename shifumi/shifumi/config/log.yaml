@@ -1,0 +1,23 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  simple:
+    format: '%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s'
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: simple
+    stream: ext://sys.stdout
+    level: DEBUG
+loggers:
+  '':
+    level: WARNING
+    handlers: [console]
+  shifumi:
+    level: INFO
+    handlers: [console]
+    propagate: no
+  shifumi.game:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
