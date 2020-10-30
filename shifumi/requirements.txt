@@ -1,0 +1,4 @@
+# install package via setup.py. 
+# “-e” option force python to call “setup.py develop” and not “setup.py install”
+# [testing] ask for setup.py to install all optional dependencies bound to “testing”
+-e .[testing]

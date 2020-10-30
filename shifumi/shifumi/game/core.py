@@ -18,25 +18,29 @@ class ExitException(Exception):
 
 
 class Game:
-    def __init__(self, name, version):
-        self.name = name
 
-        if version == "1":
-            self.rules = version1.rules
-        elif version == "2":
-            self.rules = version2.rules
+    RULES = {
+        '1': version1.rules,
+        '2': version2.rules,
+    }
+
+    def __init__(self, user, version):
+        self._user = user
+
+        if version in self.RULES:
+            self._rules = self.RULES[version]
         else:
-            print("Unknow version game: " + str(version))
-            return
+            logger.error("Unknow version game: " + str(version))
+            raise InputException()
 
     def start(self):
         screen.clear()
-        logger.debug("start game")
-        print(self.rules["instructions"])
+        logger.debug("start game", stack_info=True)
+        print(self._rules["instructions"])
 
         while True:
             try:
-                result = self.process_turn()
+                self.process_turn()
             except ExitException:
                 screen.clear()
                 break
@@ -52,11 +56,11 @@ class Game:
 
         if result.lower() == "help":
             screen.clear()
-            print(self.rules["instructions"])
+            print(self._rules["instructions"])
         elif result.lower() == "exit":
             raise ExitException()
-        elif result.isdigit() and int(result) in self.rules["game_map"]:
-            self.resolve_turn(int(result))
+        elif result.isdigit() and int(result) in self._rules["game_map"]:
+            self._resolve_turn(int(result))
             print("=" * 50)
             time.sleep(2)
         else:
@@ -70,7 +74,7 @@ class Game:
                 Menu
 --------------------------------------
 Enter "help" for instructions
-Enter a number to play: 
+Enter a number to play:
 {}
 Enter "exit" to quit
 --------------------------------------
@@ -78,7 +82,7 @@ Enter "exit" to quit
                 "\n".join(
                     [
                         "\t{}. {}".format(key, value)
-                        for key, value in self.rules["game_map"].items()
+                        for key, value in self._rules["game_map"].items()
                     ]
                 )
             )
@@ -88,26 +92,36 @@ Enter "exit" to quit
 
         # Player Input
         result = input("Enter your move : ")
-        logger.debug("get value:" + result)
+        logger.debug("get value: %s", result)
 
         return result
 
-    def resolve_turn(self, player_move):
-        logger.debug("resolve turn with ia")
-        print("Computer making a move....")
-        time.sleep(1)
-
-        # Get the computer move randomly
-        comp_move = random.randint(0, 2)
-        print("Computer chooses ", self.rules["game_map"][comp_move].upper())
+    def _resolve_turn(self, player_move):
+        # Get the computer move
+        comp_move = self._get_ai_move()
+        print(f"Computer chooses {self._rules['game_map'][comp_move]}")
 
         # Find the winner of the match
-        winner = self.rules["winner"][player_move][comp_move]
+        winner = self._get_winner(player_move, comp_move)
 
         # Declare the winner
         if winner == player_move:
-            print(self.name, "WINS!!!")
+            result = f"{self._user.name} WINS!!!"
+            self._user.add_win()
         elif winner == comp_move:
-            print("COMPUTER WINS!!!")
+            result = "COMPUTER WINS!!!"
+            self._user.add_loss()
         else:
-            print("TIE GAME")
+            result = "TIE GAME"
+
+        print(result)
+        print(f"Your new score: {self._user.score}")
+
+    def _get_ai_move(self):
+        print("Computer making a move ...")
+        time.sleep(0.2)
+        possible_move = list(self._rules["game_map"].keys())
+        return random.choice(possible_move)
+
+    def _get_winner(self, move_1, move_2):
+        return self._rules["winner"][move_1][move_2]

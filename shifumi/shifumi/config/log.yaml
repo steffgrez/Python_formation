@@ -14,10 +14,14 @@ loggers:
     level: WARNING
     handlers: [console]
   shifumi:
-    level: INFO
+    level: WARNING
     handlers: [console]
     propagate: no
   shifumi.game:
-    level: DEBUG
+    level: WARNING
+    handlers: [console]
+    propagate: no
+  shifumi.utils:
+    level: WARNING
     handlers: [console]
     propagate: no
