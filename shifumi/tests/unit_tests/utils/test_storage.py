@@ -16,7 +16,7 @@ def db_object(query_mock, tiny_db_mock):
 @patch("shifumi.utils.storage.TinyDB")
 @patch("shifumi.utils.storage.Query")
 def test_init(query_mock, tiny_db_mock):
-    return DB("path1")
+    db_object = DB("path1")
     tiny_db_mock.assert_called_with("path1")
     assert db_object._db == tiny_db_mock()
     assert db_object._query == query_mock()

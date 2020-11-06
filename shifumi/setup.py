@@ -13,7 +13,7 @@ deps = [
 test_deps = [
     "black",
     "pytest",
-    "coverage=",
+    "coverage",
     "pytest-cov",
     "pylint",
     "xenon",

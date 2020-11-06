@@ -21,7 +21,7 @@ Don't forget to create and activate your python virtual environment
 ## Dev / Test
 .. code:: bash
 
-    $ pip install -e .[testing]
+    $ pip install -e '.[testing]'
 
 ### to test
 .. code:: bash
