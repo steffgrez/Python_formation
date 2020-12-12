@@ -1,0 +1,34 @@
+version: '3.4'
+services:
+  format:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: black -l 79 shifumi tests
+    volumes:
+      - '.:/home/appuser'
+  check-format:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: black -l 79 --check shifumi tests
+  style:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: pylint --reports=n shifumi
+  complexity:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: xenon --ignore "tests" --max-absolute B --max-modules B --max-average A shifumi
+  test-unit:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: 'py.test tests/unit_tests --junitxml=reports/report_tests.xml --cov shifumi --cov-report term --cov-report xml:reports/coverage.xml'
+  test-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: py.test tests/integration_tests

@@ -1,26 +1,18 @@
+import codecs
 import os
+
 import setuptools
 
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+long_description = ''
+with codecs.open('./README.md', encoding='utf-8') as readme_md:
+    long_description = readme_md.read()
 
-deps = [
-    "tinydb==4.2.0",
-    "PyYAML==5.3.1",
-]
+with open('./requirements/base.txt') as reqs_txt:
+    reqs = [line for line in reqs_txt]
 
-test_deps = [
-    "black",
-    "pytest",
-    "coverage",
-    "pytest-cov",
-    "pylint",
-    "xenon",
-]
-extras = {
-    "testing": test_deps,
-}
+with open('./requirements/test.txt') as test_reqs_txt:
+    test_reqs = [line for line in test_reqs_txt]
 
 setuptools.setup(
     name="shifumi",
@@ -37,10 +29,11 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.6",
-    install_requires=deps,
-    tests_require=test_deps,
-    extras_require=extras,
+    python_requires=">=3.8",
+    install_requires=reqs,
+    extras_require={
+        "testing": test_reqs,
+    },
     entry_points={
         "console_scripts": ["shifumi=shifumi.main:main"],
     },
