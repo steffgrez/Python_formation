@@ -44,20 +44,25 @@ add -s -v for more debug info
 
 ### to launch
 .. code:: bash
+
     $ shifumi
 or 
 .. code:: bash
- $ python shifumi/main.py
+
+    $ python shifumi/main.py
 
 ## Docker
 .. code:: bash
+
     $ docker build -t Dockerfile -t python_formation/shifumi .
 
 then 
 
 .. code:: bash
+
     $ docker run -it python_formation/shifumi
 
 ### to test/dev
 .. code:: bash
+
     $ docker-compose run {format|check-format|style|complexity|test-unit}
